@@ -454,6 +454,15 @@ define([
 
 						// the removal of rows could cause us to need to page in more items
 						if (self._processScroll) {
+							// LYLE: ElasticSuite/scramble4#3529 forcing an adjustRowIndices here, because
+							// the indices not being fully indexed when this _processScroll is called
+							// causes an off-by-one index to be sent to insertRow, resulting in an
+							// undefined element in this._rows which causes #3529
+							from = from || Infinity;
+							to = to || Infinity;
+							var adjustAtIndex = Math.min(from, to);
+							from !== to && rows[adjustAtIndex] && self.adjustRowIndices(rows[adjustAtIndex]);
+							// LYLE: end #3529
 							self._processScroll();
 						}
 					}
