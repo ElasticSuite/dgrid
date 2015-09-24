@@ -433,6 +433,17 @@ define([
 					if (from !== undefined && rows[from]) {
 						if ('max' in rows && (to === undefined || to < rows.min || to > rows.max)) {
 							rows.max--;
+							// LYLE: ElasticSuite/scramble4#3540
+							// if all rows were deleted from the store via an external action, without
+							// the grid ever having loaded all the rows, then rows.max would end up
+							// being decremented all the way to -1, which would me no rows would ever
+							// render until rows.max somehow got increased say on List#refresh. i'm
+							// still not totally sure what rows.max represents, but i think it's the
+							// highest row that should be rendered given the viewport and the other
+							// settings like bufferRows and maxEmptySpace.
+							if (rows.max <= self._total) {
+									rows.max = Infinity;
+							}
 						}
 
 						row = rows[from];
