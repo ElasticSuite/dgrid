@@ -155,7 +155,7 @@ define([
 				return self.renderQueryResults(results, preloadNode, options).then(function (trs) {
 					return when(results.totalLength, function (total) {
 						var trCount = trs.length,
-							parentNode = preloadNode.parentNode,
+							parentNode = preloadNode && preloadNode.parentNode ? preloadNode.parentNode : preloadNode,
 							noDataNode = self.noDataNode;
 
 						if (self._rows) {
